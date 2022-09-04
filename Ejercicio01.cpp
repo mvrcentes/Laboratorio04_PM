@@ -115,13 +115,24 @@ void *soldReport(void *arg){
     pthread_exit(NULL);
 };
 
-void *varCostReport(void *arg){
+void *varUtilityReport(void *arg){
     Parameters *ps; 
     ps = (Parameters *)arg;
 
     std::cout << ps->products[ps->id].getNombre() << ":\tQ" <<(ps->products[ps->id].calcularUtilidad()) << std::endl;
     double* res = (double*)malloc(sizeof(double));
     *res = ps->totalSold += ps->products[ps->id].getProductSales();
+    return res;
+    pthread_exit(NULL);
+};
+
+void *varCostReport(void *arg){
+    Parameters *ps; 
+    ps = (Parameters *)arg;
+
+    // std::cout << ps->products[ps->id].getNombre() << ":\tQ" <<(ps->products[ps->id].calcularUtilidad()) << std::endl;
+    double* res = (double*)malloc(sizeof(double));
+    *res = ps->totalSold += ps->products[ps->id].getVarCost();
     return res;
     pthread_exit(NULL);
 };
@@ -165,20 +176,24 @@ int main(){
     printf ("Utilidad por producto \n\n");
     for (double k=0; k < TOTAL_PRODUCTS; k++){
         p.id = k;
+        pthread_create(&tid, NULL, varUtilityReport, ( void *)&p);
+        pthread_join(tid, &thread_result_MonthUtility);
+
         pthread_create(&tid, NULL, varCostReport, ( void *)&p);
         pthread_join(tid, &thread_result_VarCost);
+
     }
 
     printf ("\n --------------------------------------------- \n");
     double tSold = *(double*) thread_result_Sold;
-    // double tUtility = *(double*) thread_result_VarCost;
-    // double tUtilityMonth = *(double*) thread_result_MonthUtility;
+    double tVarCost = *(double*) thread_result_VarCost;
+    double tUtilityMonth = *(double*) thread_result_MonthUtility;
 
     free(thread_result_Sold);
     std::cout << "Total de venta: \t" << tSold << std::endl;
-
-    // std::cout << "\nTotal de venta: \t" << tUtilityMonth << std::endl;
-
+    std::cout << "Total de costos variables: \t" << tVarCost << std::endl;
+    std::cout << "Total de utilidad: \t" << tUtilityMonth << std::endl;
+    printf ("\n --------------------------------------------- \n\n\n\n");
 
     pthread_exit(NULL);
 }
