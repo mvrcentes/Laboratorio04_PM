@@ -1,3 +1,7 @@
+//Programación de Microprocesadores
+//Laboratorio 4 Parte 1 secuencial
+//Marco Ramirez 21032
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>

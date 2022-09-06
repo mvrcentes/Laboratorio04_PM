@@ -1,3 +1,8 @@
+//Programación de Microprocesadores
+//Laboratorio 4 Parte 1 en paralelo
+//Marco Ramirez 21032
+
+
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
